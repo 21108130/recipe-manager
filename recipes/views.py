@@ -146,14 +146,14 @@ def search_recipes(request):
     local_recipes = []
 
     if query:
-        # 1. Local database se search karo
+        
         local_recipes = Recipe.objects.filter(
             Q(title__icontains=query) |
             Q(description__icontains=query) |
             Q(ingredients__icontains=query)
         ).distinct()
 
-        # 2. Web se bhi search karo
+        
         try:
             scraper = RecipeScraper()
             web_recipes = scraper.search_recipes(query)
@@ -260,18 +260,18 @@ def category_recipes(request, category_id):
     """Show recipes by category - both local and web"""
     category = get_object_or_404(Category, pk=category_id)
 
-    # 1. Local database se recipes
+
     local_recipes = Recipe.objects.filter(category=category)
 
-    # 2. Web se bhi recipes search karo based on category name
+    
     web_recipes = []
     try:
         scraper = RecipeScraper()
-        # Category name ke according search karo
+        
         web_recipes = scraper.search_recipes(category.name)
         print(f"Found {len(web_recipes)} web recipes for category '{category.name}'")
 
-        # Remove duplicates (same URL wale)
+        
         seen_urls = set()
         unique_recipes = []
         for recipe in web_recipes:
