@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Recipe Manager{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-md-8 mx-auto text-center">
+            <h1 class="display-4 mb-3">Welcome to Recipe Manager</h1>
+            <p class="lead">Discover delicious recipes, share your own creations, and connect with food lovers!</p>
+            {% if not user.is_authenticated %}
+                <div class="mt-4">
+                    <a href="{% url 'signup' %}" class="btn btn-primary btn-lg me-2">
+                        <i class="fas fa-user-plus"></i> Get Started
+                    </a>
+                    <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Categories -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-3"><i class="fas fa-tags"></i> Browse Categories</h2>
+        </div>
+        {% for category in categories %}
+            <div class="col-md-3 col-sm-6 mb-3">
+                <a href="{% url 'category_recipes' category.id %}" class="text-decoration-none">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ category.name }}</h5>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Recent Recipes -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-3"><i class="fas fa-clock"></i> Recent Recipes</h2>
+        </div>
+        {% for recipe in recent_recipes %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if recipe.image %}
+                        <img src="{{ recipe.image.url }}" class="card-img-top recipe-image" alt="{{ recipe.title }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top recipe-image" alt="No image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <p class="card-text text-muted">
+                            <i class="fas fa-user"></i> {{ recipe.created_by.username }} |
+                            <i class="fas fa-clock"></i> {{ recipe.preparation_time }} mins |
+                            <i class="fas fa-heart text-danger"></i> {{ recipe.total_likes }}
+                        </p>
+                        <p class="card-text">{{ recipe.description|truncatewords:20 }}</p>
+                        <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary">View Recipe</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

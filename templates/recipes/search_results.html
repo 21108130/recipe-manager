@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results for "{{ query }}"{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">
+        <i class="fas fa-search"></i>
+        {% if query %}
+            Search Results for "{{ query }}"
+        {% else %}
+            Search Recipes
+        {% endif %}
+    </h1>
+
+    {% if query %}
+        <!-- Local Database Results -->
+        {% if local_recipes %}
+            <div class="mb-5">
+                <h3 class="mb-3">
+                    <i class="fas fa-database text-primary"></i>
+                    Our Recipes ({{ total_local }} found)
+                </h3>
+                <div class="row">
+                    {% for recipe in local_recipes %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                {% if recipe.image %}
+                                    <img src="{{ recipe.image.url }}" class="card-img-top recipe-image"
+                                         alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
+                                         style="height: 200px;">
+                                        <i class="fas fa-utensils fa-3x"></i>
+                                    </div>
+                                {% endif %}
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ recipe.title }}</h5>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <i class="fas fa-user"></i> {{ recipe.created_by.username }} |
+                                            <i class="fas fa-tag"></i> {{ recipe.category.name }}
+                                        </small>
+                                    </p>
+                                    <p class="card-text">{{ recipe.description|truncatewords:15 }}</p>
+                                    <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary">
+                                        <i class="fas fa-eye"></i> View Recipe
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Web Results -->
+        <div class="mb-4">
+            <h3 class="mb-3">
+                <i class="fas fa-globe text-success"></i>
+                Recipes from Web ({{ total_web }} found)
+            </h3>
+
+            {% if web_recipes %}
+                <div class="row">
+                    {% for recipe in web_recipes %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100">
+                                {% if recipe.image %}
+                                    <img src="{{ recipe.image }}" class="card-img-top recipe-image"
+                                         alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
+                                         style="height: 200px;">
+                                        <i class="fas fa-globe fa-3x"></i>
+                                    </div>
+                                {% endif %}
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ recipe.title }}</h5>
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            <i class="fas fa-source"></i> {{ recipe.source }}
+                                            {% if recipe.rating %}
+                                                | <i class="fas fa-star text-warning"></i> {{ recipe.rating }}
+                                            {% endif %}
+                                        </small>
+                                    </p>
+                                    <p class="card-text">{{ recipe.description }}</p>
+
+                                    <a href="{% url 'recipe_external' %}?url={{ recipe.url|urlencode }}"
+                                       class="btn btn-success" target="_blank">
+                                        <i class="fas fa-external-link-alt"></i> View Recipe
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    No recipes found on web for "{{ query }}". Try different keywords!
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- No Results at All -->
+        {% if not local_recipes and not web_recipes %}
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                No recipes found for "{{ query }}" in our database or on the web.
+                <a href="{% url 'recipe_list' %}" class="alert-link">View all recipes</a>
+            </div>
+        {% endif %}
+
+    {% else %}
+        <!-- Empty Search Page -->
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-search fa-4x text-muted mb-3"></i>
+                        <h3>Search Recipes</h3>
+                        <p class="text-muted">
+                            Search for recipes in our database or from across the web!
+                        </p>
+                        <div class="alert alert-info">
+                            <strong>Popular searches:</strong> biryani, pasta, pizza, chicken, curry
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

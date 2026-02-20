@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }} Recipes{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Category Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-4 mb-3">
+                <i class="fas fa-tag text-primary"></i> {{ category.name }} Recipes
+            </h1>
+            {% if has_recipes %}
+                <p class="lead">
+                    Found {{ total_local }} local recipe{{ total_local|pluralize }}
+                    {% if total_web > 0 %}
+                        and {{ total_web }} recipe{{ total_web|pluralize }} from the web
+                    {% endif %}
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Local Recipes Section -->
+    {% if local_recipes %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-3">
+                <i class="fas fa-database text-primary"></i>
+                Our Community Recipes ({{ total_local }})
+            </h2>
+        </div>
+        {% for recipe in local_recipes %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if recipe.image %}
+                        <img src="{{ recipe.image.url }}" class="card-img-top recipe-image"
+                             alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
+                             style="height: 200px;">
+                            <i class="fas fa-utensils fa-3x"></i>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="fas fa-user"></i> {{ recipe.created_by.username }} |
+                                <i class="fas fa-clock"></i> {{ recipe.preparation_time }} mins |
+                                <i class="fas fa-heart text-danger"></i> {{ recipe.total_likes }}
+                            </small>
+                        </p>
+                        <p class="card-text">{{ recipe.description|truncatewords:15 }}</p>
+                        <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary">
+                            <i class="fas fa-eye"></i> View Recipe
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Web Recipes Section -->
+    {% if web_recipes %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="mb-3">
+                <i class="fas fa-globe text-success"></i>
+                Recipes from Around the Web ({{ total_web }})
+            </h2>
+            <p class="text-muted mb-3">
+                <i class="fas fa-info-circle"></i>
+                These recipes are automatically fetched from popular cooking websites
+            </p>
+        </div>
+        {% for recipe in web_recipes %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if recipe.image %}
+                        <img src="{{ recipe.image }}" class="card-img-top recipe-image"
+                             alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-secondary text-white d-flex align-items-center justify-content-center"
+                             style="height: 200px;">
+                            <i class="fas fa-globe fa-3x"></i>
+                        </div>
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="fas fa-source"></i> {{ recipe.source }}
+                                {% if recipe.rating %}
+                                    | <i class="fas fa-star text-warning"></i> {{ recipe.rating }}
+                                {% endif %}
+                            </small>
+                        </p>
+                        <p class="card-text">{{ recipe.description|truncatewords:15 }}</p>
+
+                        <a href="{% url 'recipe_external' %}?url={{ recipe.url|urlencode }}"
+                           class="btn btn-success" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> View Recipe
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- No Recipes Found -->
+    {% if not has_recipes %}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info text-center p-5">
+                <i class="fas fa-info-circle fa-4x mb-3"></i>
+                <h3>No recipes found in {{ category.name }} category</h3>
+                <p class="lead mb-4">Be the first to add a recipe in this category!</p>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'recipe_create' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus"></i> Add Recipe
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-sign-in-alt"></i> Login to Add Recipe
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Back to Categories Link -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Categories
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

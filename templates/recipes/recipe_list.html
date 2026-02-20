@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}All Recipes{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1><i class="fas fa-list"></i> All Recipes</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="{% url 'recipe_create' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Add New Recipe
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter by Category -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="btn-group" role="group">
+                <a href="{% url 'recipe_list' %}" class="btn btn-outline-primary {% if not request.GET.category %}active{% endif %}">
+                    All
+                </a>
+                {% for category in categories %}
+                    <a href="?category={{ category.id }}" class="btn btn-outline-primary {% if request.GET.category == category.id|stringformat:'s' %}active{% endif %}">
+                        {{ category.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipes Grid -->
+    <div class="row">
+        {% for recipe in recipes %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if recipe.image %}
+                        <img src="{{ recipe.image.url }}" class="card-img-top recipe-image" alt="{{ recipe.title }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/300x200?text=No+Image" class="card-img-top recipe-image" alt="No image">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ recipe.title }}</h5>
+                        <p class="card-text">
+                            <small class="text-muted">
+                                <i class="fas fa-user"></i> {{ recipe.created_by.username }} |
+                                <i class="fas fa-tag"></i> {{ recipe.category.name }} |
+                                <i class="fas fa-heart text-danger"></i> {{ recipe.total_likes }}
+                            </small>
+                        </p>
+                        <p class="card-text">{{ recipe.description|truncatewords:15 }}</p>
+                        <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">
+                    No recipes found. {% if user.is_authenticated %}<a href="{% url 'recipe_create' %}">Create one now!</a>{% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
