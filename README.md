@@ -9,7 +9,7 @@ A comprehensive recipe management system with automatic web scraping capabilitie
 
 ## 📸 Screenshots
 
-*(Yahan apni website ke screenshots add karein)*
+
 
 | Home Page | Recipe Detail | Profile Page |
 |-----------|---------------|--------------|
