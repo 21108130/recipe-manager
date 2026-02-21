@@ -7,14 +7,6 @@
 
 A comprehensive recipe management system with automatic web scraping capabilities. Users can search, create, and save recipes from both local database and popular cooking websites.
 
-## 📸 Screenshots
-
-
-
-| Home Page | Recipe Detail | Profile Page |
-|-----------|---------------|--------------|
-| ![Home](screenshots/home.png) | ![Detail](screenshots/detail.png) | ![Profile](screenshots/profile.png) |
-
 ## ✨ Features
 
 ### 🔐 User Authentication
