@@ -1,12 +1,7 @@
 # 🍳 Recipe Manager - Django Full Stack Application
 
 ![Django](https://img.shields.io/badge/Django-6.0.2-green)
-![Python](https://img.shields.io/badge/Python-3.12-blue)
-![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-purple)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-
-A comprehensive recipe management system with automatic web scraping capabilities. Users can search, create, and save recipes from both local database and popular cooking websites.
-
+![Python]
 ## ✨ Features
 
 ### 🔐 User Authentication
@@ -208,24 +203,3 @@ GitHub: @21108130
 LinkedIn: [Maira Javed](https://www.linkedin.com/in/maira-javed-34bba7373/)
 
 Email: mahijaved@gmail.com
-
-🙏 Acknowledgments
-Django Documentation
-
-Bootstrap Documentation
-
-BeautifulSoup Documentation
-
-All the recipe websites that inspired this project
-
-📧 Contact
-For any queries or suggestions, feel free to reach out:
-
-Email: mahijaved@gmail.com
-
-LinkedIn: [Maira Javed](https://www.linkedin.com/in/maira-javed-34bba7373/)
-
-
-
-
-
